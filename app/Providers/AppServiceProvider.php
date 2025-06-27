@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\SodiumEncriptionService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,9 @@ class AppServiceProvider extends ServiceProvider
         });
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(15)->by(($request->user()?->id) ?: $request->ip());
+        });
+        $this->app->singleton(SodiumEncriptionService::class, function(){
+            return new SodiumEncriptionService();
         });
     }
 }
